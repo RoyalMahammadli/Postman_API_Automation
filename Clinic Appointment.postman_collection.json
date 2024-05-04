@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "cf785c59-2b48-4faf-bea4-930bea747483",
+		"name": "Clinic Appointment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31854063"
+	},
+	"item": [
+		{
+			"name": "Clinic Schedule",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check the status\",()=>{",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")",
+							"})",
+							"pm.test(\"check the status code(with one of)\",()=>{",
+							"    pm.expect(pm.response.code).to.be.oneOf([200])",
+							"})",
+							"pm.test(\"check the responseTime\",()=>{",
+							"    pm.expect(pm.response.responseTime).to.be.below(700)",
+							"})",
+							"const myResponse=pm.response.json();",
+							"pm.test(\"ckeck the type of response\",()=>{",
+							"    pm.expect(myResponse).to.be.an(\"object\")",
+							"})",
+							"pm.test(\"check the response success\",()=>{",
+							"    pm.expect(myResponse.success).to.eql(true)",
+							"})",
+							"",
+							"pm.test(\"check the  include metod \",()=>{",
+							"    console.log(myResponse.data.nextDateHasFreeSlots)",
+							"    pm.expect(myResponse.data.nextDateHasFreeSlots).to.be.eql(false)",
+							"})",
+							"pm.test(\"check the  include metod \",()=>{",
+							"    console.log(myResponse.data.currentDate[0])",
+							"    pm.expect(myResponse.data.currentDate[0].start).to.be.include(\"2024-04-27T12:00:00\")",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.kyla.com/drchrono/public/api/v1/schedule?clinicId={{clinicId}}&date={{date}}&examRoom={{examRoom}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"kyla",
+						"com"
+					],
+					"path": [
+						"drchrono",
+						"public",
+						"api",
+						"v1",
+						"schedule"
+					],
+					"query": [
+						{
+							"key": "clinicId",
+							"value": "{{clinicId}}"
+						},
+						{
+							"key": "date",
+							"value": "{{date}}"
+						},
+						{
+							"key": "examRoom",
+							"value": "{{examRoom}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Select Time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600)\r",
+							"})\r",
+							"pm.test(\"check status code\",()=>{\r",
+							"    pm.expect(pm.response.code).to.be.eql(200)\r",
+							"})\r",
+							"pm.test(\"check the status\", function () {\r",
+							"    pm.expect(pm.response.status).to.be.equal(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.kyla.com/mobile/public/api/v1/appointments/reasons/with-urgency?consultationType={{ReasonOfConsultation}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"kyla",
+						"com"
+					],
+					"path": [
+						"mobile",
+						"public",
+						"api",
+						"v1",
+						"appointments",
+						"reasons",
+						"with-urgency"
+					],
+					"query": [
+						{
+							"key": "consultationType",
+							"value": "{{ReasonOfConsultation}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CheckEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.collectionVariables.set('myEmail',pm.response.json().data.email)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.kyla.com/mobile/api/v4/auth/signup/check?email={{$randomEmail}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"kyla",
+						"com"
+					],
+					"path": [
+						"mobile",
+						"api",
+						"v4",
+						"auth",
+						"signup",
+						"check"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "{{$randomEmail}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SendPost",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{myEmail}}\",\r\n    \"sex\": \"MALE\",\r\n    \"dateOfBirth\": \"1994-12-01\",\r\n    \"phoneNumber\": \"+1 212-212-1212\"\r\n       \r\n       \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.kyla.com/mobile/api/v4/auth/signup/check",
+					"protocol": "https",
+					"host": [
+						"api",
+						"kyla",
+						"com"
+					],
+					"path": [
+						"mobile",
+						"api",
+						"v4",
+						"auth",
+						"signup",
+						"check"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://actionurgentcare.com/clinics/blossom-hill"
+		},
+		{
+			"key": "clinicId",
+			"value": "110544"
+		},
+		{
+			"key": "date",
+			"value": "2024-04-27"
+		},
+		{
+			"key": "examRoom",
+			"value": "1"
+		},
+		{
+			"key": "ReasonOfConsultation",
+			"value": "in-clinic"
+		},
+		{
+			"key": "Email",
+			"value": "wawaw%40mail.ru"
+		},
+		{
+			"key": "myEmail",
+			"value": "royal%40mail.ru"
+		},
+		{
+			"key": "myRandomEmail",
+			"value": "{{$randomEmail}}"
+		}
+	]
+}
